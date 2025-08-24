@@ -15,6 +15,7 @@ import ClaimsSection from "./ClaimsSection";
 import PaymentsTable from "./PaymentsTable";
 import InsuranceServicesList from "./InsuranceServicesList";
 import InsPaymentsTable from "./InsPaymentsTable";
+import ProfileTableAPI from "./ProfileTable";
 
 const SectionCard = ({
   icon: Icon,
@@ -93,9 +94,9 @@ const AllPolicies = () => (
         name="keywords"
         content="insurance dashboard, claims, policies, payments, management"
       />
-      <link rel="icon" href="/favicon.ico" sizes="any" />
-      <link rel="icon" type="image/png" href="/favicon.png" />
-      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      <link rel="icon" href="insurance.png" sizes="any" />
+      <link rel="icon" type="image/png" href="insurance.png" />
+      <link rel="apple-touch-icon" href="insurance.png" />
     </Helmet>
 
     <div className="max-w-full mx-auto relative z-10 space-y-8">
@@ -170,6 +171,14 @@ const AllPolicies = () => (
         }
       >
         <InsPaymentsTable />
+      </SectionCard>
+      <SectionCard
+        icon={Settings}
+        title="Management Center"
+        gradientFrom="red-500"
+        gradientTo="rose-500"
+      >
+        <ProfileTableAPI />
       </SectionCard>
     </div>
   </div>

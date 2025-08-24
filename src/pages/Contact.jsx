@@ -100,9 +100,9 @@ const ContactPage = () => {
           name="keywords"
           content="insurance contact, support, claims, quote, smart insurance"
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="insurance.png" sizes="any" />
+        <link rel="icon" type="image/png" href="insurance.png" />
+        <link rel="apple-touch-icon" href="insurance.png" />
       </Helmet>
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -inset-10 opacity-20">

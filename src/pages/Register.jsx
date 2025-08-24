@@ -216,7 +216,7 @@ const Register = () => {
           name="keywords"
           content="register, sign up, smart insurance, create account, policies"
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="insurance.png" sizes="any" />
       </Helmet>
 
       <div className="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl w-full max-w-md animate-fadeIn">

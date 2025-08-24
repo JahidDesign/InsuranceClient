@@ -2,7 +2,6 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import {
   onAuthStateChanged,
-  onIdTokenChanged,
   getIdToken,
   signOut as firebaseSignOut,
   setPersistence,
@@ -26,7 +25,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_BACKEND_URL || "https://insurances-lmy8.onrender.com";
+  const API_URL =
+    import.meta.env.VITE_BACKEND_URL || "https://insurances-lmy8.onrender.com";
   const MAIN_ADMIN_EMAIL = "jhadam904@gmail.com";
 
   // Persist user & token
@@ -41,16 +41,15 @@ export const AuthProvider = ({ children }) => {
   // Sync Firebase user with backend
   const syncWithBackend = useCallback(
     async (firebaseUser) => {
-      try {
-        if (!firebaseUser) return;
+      if (!firebaseUser) return; // Do nothing if no user
 
+      try {
         const idToken = await getIdToken(firebaseUser, true);
         const res = await fetch(`${API_URL}/customer/firebase-login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idToken }),
         });
-
         if (!res.ok) throw new Error("Backend login failed");
         const data = await res.json();
 
@@ -59,39 +58,24 @@ export const AuthProvider = ({ children }) => {
 
         setUser(updatedUser);
         setToken(data.token);
-        setLoading(false);
       } catch (err) {
         console.error("❌ Backend sync error:", err);
-        toast.error("Authentication failed. Please login again.");
-        setUser(null);
-        setToken(null);
+        // ❌ DO NOT logout on error
+      } finally {
         setLoading(false);
       }
     },
     [API_URL]
   );
 
-  // Initialize Firebase auth listener
+  // Firebase auth listener
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence).then(() => {
-      const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
-        if (firebaseUser) {
-          await syncWithBackend(firebaseUser);
-        } else {
-          setUser(null);
-          setToken(null);
-          setLoading(false);
-        }
-      });
-
-      const unsubscribeToken = onIdTokenChanged(auth, async (firebaseUser) => {
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) await syncWithBackend(firebaseUser);
+        else setLoading(false); // Do NOT logout
       });
-
-      return () => {
-        unsubscribeAuth();
-        unsubscribeToken();
-      };
+      return () => unsubscribe();
     });
   }, [syncWithBackend]);
 
@@ -108,24 +92,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Manual login (JWT)
+  // Manual login
   const login = (userData, jwtToken) => {
     if (userData?.email === MAIN_ADMIN_EMAIL) userData.role = "admin";
     setUser(userData);
     setToken(jwtToken);
   };
 
-  // Logout
+  // Manual logout only
   const logout = async () => {
-    try {
-      await firebaseSignOut(auth);
-      setUser(null);
-      setToken(null);
-      toast.success("Logged out successfully");
-    } catch (err) {
-      console.error("❌ Logout failed:", err);
-      toast.error("Logout failed");
-    }
+    await firebaseSignOut(auth);
+    setUser(null);
+    setToken(null);
+    toast.success("Logged out successfully");
   };
 
   return (

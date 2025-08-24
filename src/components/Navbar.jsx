@@ -57,7 +57,7 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Spacer */}
+      {/* Spacer for fixed navbar */}
       <div className="h-20"></div>
 
       <nav
@@ -102,7 +102,7 @@ const Navbar = () => {
               </Link>
             )}
 
-            {/* Profile dropdown */}
+            {/* Profile Dropdown */}
             {user ? (
               <div className="relative ml-4" ref={dropdownRef}>
                 <button
@@ -115,12 +115,8 @@ const Navbar = () => {
                     className="w-12 h-12 rounded-full border-2 border-white shadow-lg object-cover"
                   />
                   <div className="hidden xl:block text-left">
-                    <div className="font-semibold text-gray-800">
-                      {displayName}
-                    </div>
-                    <div className="text-xs text-green-500 font-semibold">
-                      ● Online
-                    </div>
+                    <div className="font-semibold text-gray-800">{displayName}</div>
+                    <div className="text-xs text-green-500 font-semibold">● Online</div>
                   </div>
                 </button>
 
@@ -133,9 +129,7 @@ const Navbar = () => {
                         className="w-16 h-16 rounded-2xl border-2 border-white shadow-lg object-cover"
                       />
                       <div>
-                        <div className="font-bold text-gray-800 text-lg">
-                          {displayName}
-                        </div>
+                        <div className="font-bold text-gray-800 text-lg">{displayName}</div>
                         <div className="text-sm text-gray-500">{user.email}</div>
                       </div>
                     </div>
@@ -144,12 +138,11 @@ const Navbar = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-4 w-full px-5 py-3 text-gray-700 hover:bg-blue-50 rounded-2xl transition-all duration-300"
                     >
-                      <User className="w-4 h-4 text-blue-600" /> Profile
-                      Settings
+                      <User className="w-4 h-4 text-blue-600" /> Profile Settings
                     </Link>
                     <button
                       onClick={() => {
-                        logout();
+                        logout(); // manual logout only
                         setDropdownOpen(false);
                       }}
                       className="flex items-center gap-4 w-full px-5 py-3 text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300"
@@ -185,9 +178,7 @@ const Navbar = () => {
           }`}
         >
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <Link to="/" className="font-bold text-xl">
-              LifeSecure
-            </Link>
+            <Link to="/" className="font-bold text-xl">LifeSecure</Link>
             <button onClick={() => setSideMenuOpen(false)}>
               <X className="w-6 h-6" />
             </button>
