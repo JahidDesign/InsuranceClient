@@ -1,0 +1,148 @@
+// src/context/AuthContext.jsx
+import React, { createContext, useState, useEffect, useCallback } from "react";
+import {
+  onAuthStateChanged,
+  onIdTokenChanged,
+  getIdToken,
+  signOut as firebaseSignOut,
+  setPersistence,
+  browserLocalPersistence,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { auth } from "../firebase";
+import toast from "react-hot-toast";
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
+      return null;
+    }
+  });
+  const [token, setToken] = useState(localStorage.getItem("authToken") || null);
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = import.meta.env.VITE_BACKEND_URL || "https://insurances-lmy8.onrender.com";
+  const MAIN_ADMIN_EMAIL = "jhadam904@gmail.com";
+
+  // Persist user & token
+  useEffect(() => {
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    else localStorage.removeItem("user");
+
+    if (token) localStorage.setItem("authToken", token);
+    else localStorage.removeItem("authToken");
+  }, [user, token]);
+
+  // Sync Firebase user with backend
+  const syncWithBackend = useCallback(
+    async (firebaseUser) => {
+      try {
+        if (!firebaseUser) return;
+
+        const idToken = await getIdToken(firebaseUser, true);
+        const res = await fetch(`${API_URL}/customer/firebase-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
+
+        if (!res.ok) throw new Error("Backend login failed");
+        const data = await res.json();
+
+        let updatedUser = data.user;
+        if (updatedUser?.email === MAIN_ADMIN_EMAIL) updatedUser.role = "admin";
+
+        setUser(updatedUser);
+        setToken(data.token);
+        setLoading(false);
+      } catch (err) {
+        console.error("❌ Backend sync error:", err);
+        toast.error("Authentication failed. Please login again.");
+        setUser(null);
+        setToken(null);
+        setLoading(false);
+      }
+    },
+    [API_URL]
+  );
+
+  // Initialize Firebase auth listener
+  useEffect(() => {
+    setPersistence(auth, browserLocalPersistence).then(() => {
+      const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          await syncWithBackend(firebaseUser);
+        } else {
+          setUser(null);
+          setToken(null);
+          setLoading(false);
+        }
+      });
+
+      const unsubscribeToken = onIdTokenChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) await syncWithBackend(firebaseUser);
+      });
+
+      return () => {
+        unsubscribeAuth();
+        unsubscribeToken();
+      };
+    });
+  }, [syncWithBackend]);
+
+  // Google login
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) await syncWithBackend(result.user);
+      toast.success("Login successful");
+    } catch (err) {
+      console.error("❌ Google login failed:", err);
+      toast.error("Login failed");
+    }
+  };
+
+  // Manual login (JWT)
+  const login = (userData, jwtToken) => {
+    if (userData?.email === MAIN_ADMIN_EMAIL) userData.role = "admin";
+    setUser(userData);
+    setToken(jwtToken);
+  };
+
+  // Logout
+  const logout = async () => {
+    try {
+      await firebaseSignOut(auth);
+      setUser(null);
+      setToken(null);
+      toast.success("Logged out successfully");
+    } catch (err) {
+      console.error("❌ Logout failed:", err);
+      toast.error("Logout failed");
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        loginWithGoogle,
+        loading,
+        isAuthenticated: !!user && !!token,
+        isAdmin: user?.role === "admin",
+        role: user?.role || "customer",
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
