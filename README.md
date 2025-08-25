@@ -1,12 +1,137 @@
-# React + Vite
+🛡️ Smart Insurance Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack insurance management platform built with React, Node.js, Express, and MongoDB.
+It allows users to explore insurance services, purchase policies, make payments, and contact support, while admins manage policies, users, and payments with advanced dashboard features.
 
-Currently, two official plugins are available:
+🌐 Live Site: Smart Insurance
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📂 Client Repo: InsuranceClient
 
-## Expanding the ESLint configuration
+📂 Server Repo: InsurancelifeServer
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🚀 Features
+👤 User Features
+
+🔐 Authentication – Sign up, login, and secure session with JWT
+
+📋 Insurance Plans – Browse life, health, and car insurance policies
+
+💳 Payment Gateway – Secure insurance payment system (mock/real integration)
+
+⭐ Reviews & Feedback – Add service reviews with star ratings
+
+📞 Contact Form – Send support requests directly to the admin
+
+📝 User Profile – Manage purchased policies and update information
+
+🛠️ Admin Features
+
+📊 Dashboard – Manage users, policies, and transactions
+
+✏️ CRUD Operations – Add, edit, delete, and update insurance services
+
+✅ Approve / Reject Payments – Change payment status dynamically
+
+🔍 Search & Filters – Manage records efficiently
+
+📩 Messages Management – View and reply to user queries
+
+🖼️ Screenshots
+User Panel
+
+Home Page
+
+Insurance Listings
+
+Payment Form
+
+Profile Page
+
+Admin Panel
+
+Admin Dashboard
+
+Manage Users
+
+Manage Policies
+
+Manage Payments
+
+🛠️ Tech Stack
+Frontend
+
+⚛️ React.js (Vite)
+
+🎨 Tailwind CSS + ShadCN/UI for modern design
+
+🎭 Framer Motion for smooth animations
+
+📦 Axios for API requests
+
+🔒 JWT Authentication handling
+
+Backend
+
+🟢 Node.js + Express.js
+
+🗄️ MongoDB + Mongoose
+
+🔐 JWT for authentication
+
+⚡ RESTful APIs for client communication
+
+⚙️ Installation
+Clone Repositories
+# Client
+git clone https://github.com/JahidDesign/InsuranceClient.git
+cd InsuranceClient
+npm install
+npm run dev
+
+# Server
+git clone https://github.com/JahidDesign/InsurancelifeServer.git
+cd InsurancelifeServer
+npm install
+npm start
+
+🔑 Admin Login
+
+Email: jhadam904@gmail.com
+
+Password: jaHid904
+
+📬 API Endpoints
+
+Base URL: https://insurances-lmy8.onrender.com
+
+Endpoint	Method	Description
+/services	GET	Fetch all insurance services
+/paymentsInsurance	GET	Get all payments (admin)
+/paymentsInsurance	POST	Add new payment
+/contact	POST	Send message
+/users	GET	Get all users (admin)
+/users/:id	PUT	Update user role/status
+🌟 Key Highlights
+
+✔️ Modern responsive design
+✔️ Full CRUD functionality
+✔️ Secure authentication system
+✔️ Admin & User dashboards
+✔️ Deployed with Netlify (client) + Render (server)
+
+📌 Future Improvements
+
+✅ Real payment gateway (SSLCommerz / Stripe)
+
+✅ Role-based access with Super Admin
+
+✅ Email notifications for transactions
+
+✅ Insurance claim management
+
+👨‍💻 Developer
+
+Jahid Hasan
+🔗 Portfolio
+ | LinkedIn
+ | GitHub
