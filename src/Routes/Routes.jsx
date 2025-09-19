@@ -1,59 +1,59 @@
 // File: src/routes/AppRoutes.jsx
 import React, { useContext, Suspense, lazy } from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 // ---------------- Lazy load pages ----------------
-const Home = lazy(() => import("../pages/Home"));
-const About = lazy(() => import("../pages/About"));
-const Blog = lazy(() => import("../pages/Blog"));
-const AllPolicies = lazy(() => import("../pages/AllPolicies"));
-const ContactPage = lazy(() => import("../pages/Contact"));
-const Login = lazy(() => import("../pages/Login"));
-const Register = lazy(() => import("../pages/Register"));
-const Profile = lazy(() => import("../pages/Profile"));
-const NotFound = lazy(() => import("../pages/NotFound"));
-const VisitorDetailsPage = lazy(() => import("../pages/VisitorDetailsPage"));
-const InsuranceDetails  = lazy(() => import("../pages/InsuranceDetails"));
-const MyBookQuote  = lazy(() => import("../pages/MyBookQuote"));
-const BlogDetail = lazy(() => import("../pages/BlogDetail"));
+const Home = lazy(() => import("../pages/Home.jsx"));
+const About = lazy(() => import("../pages/About.jsx"));
+const Blog = lazy(() => import("../pages/Blog.jsx"));
+const AllPolicies = lazy(() => import("../pages/AllPolicies.jsx"));
+const ContactPage = lazy(() => import("../pages/Contact.jsx"));
+const Login = lazy(() => import("../pages/Login.jsx"));
+const Register = lazy(() => import("../pages/Register.jsx"));
+const Profile = lazy(() => import("../pages/Profile.jsx"));
+const NotFound = lazy(() => import("../pages/NotFound.jsx"));
+const VisitorDetailsPage = lazy(() => import("../pages/VisitorDetailsPage.jsx"));
+const InsuranceDetails = lazy(() => import("../pages/InsuranceDetails.jsx"));
+const MyBookQuote = lazy(() => import("../pages/MyBookQuote.jsx"));
+const BlogDetail = lazy(() => import("../pages/BlogDetail.jsx"));
 
 // Admin Pages
-const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
-const AdminDashboard = lazy(() => import("../pages/admin/Dashboard"));
-const ManagePolicies = lazy(() => import("../pages/admin/ManagePolicies"));
-const ManageUsers = lazy(() => import("../pages/admin/ManageUsers"));
-const ManageBlog = lazy(() => import("../pages/admin/ManageBlog"));
-const Transactions = lazy(() => import("../pages/admin/Transactions"));
-const ManagementTable = lazy(() => import("../pages/admin/ManagementTable"));
-const AddBlogForm = lazy(() => import("../pages/admin/AddBlogForm"));
-const ManageBlogTable = lazy(() => import("../pages/admin/ManageBlogTable"));
-const InsuranceForm = lazy(() => import("../pages/admin/LifeInsuranceFrom"));
-const QuoteLifeInsuranceFrom = lazy(() => import("../pages/QuoteLifeInsuranceFrom"));
-const CarouselSliderForm = lazy(() => import("../pages/InsuranceFormCaro"));
-const HeroCarouselForm = lazy(() => import("../pages/HeroCarouselForm"));
-const HeroCarouselManager = lazy(() => import("../pages/HeroCarouselManager"));
-const InsuranceCarousel = lazy(() => import("../pages/InsuranceCarouselManager"));
-const UserInsuranceTabs = lazy(() => import("../pages/UserInsuranceTabs"));
-const ReviewsSectionForm = lazy(() => import("../pages/ReviewsSectionForm"));
-const AdminReviewsTable = lazy(() => import("../pages/AdminReviewsTable"));
-const VisitorNews = lazy(() => import("../pages/admin/visitorNews"));
-const ReviewsSection = lazy(() => import("../pages/admin/ReviewsSection"));
-const AddVisitorForm = lazy(() => import("../pages/admin/AddVisitorNewsForm"));
-const AddPolicyForm = lazy(() => import("../pages/admin/AddPolicyForm"));
-const PolicyManagementTable = lazy(() => import("../pages/admin/PolicyTableEidt"));
-const ContactManager = lazy(() => import("../pages/admin/adminContact"));
-const ContactTableManager = lazy(() => import("../pages/admin/ContactTableManager"));
-const VisitorNewsTable = lazy(() => import("../pages/admin/VisitorNewsTable"));
-const Messages = lazy(() => import("../pages/admin/Messages"));
+const AdminLayout = lazy(() => import("../components/admin/AdminLayout.jsx"));
+const AdminDashboard = lazy(() => import("../pages/admin/Dashboard.jsx"));
+const ManagePolicies = lazy(() => import("../pages/admin/ManagePolicies.jsx"));
+const ManageUsers = lazy(() => import("../pages/admin/ManageUsers.jsx"));
+const ManageBlog = lazy(() => import("../pages/admin/ManageBlog.jsx"));
+const Transactions = lazy(() => import("../pages/admin/Transactions.jsx"));
+const ManagementTable = lazy(() => import("../pages/admin/ManagementTable.jsx"));
+const AddBlogForm = lazy(() => import("../pages/admin/AddBlogForm.jsx"));
+const ManageBlogTable = lazy(() => import("../pages/admin/ManageBlogTable.jsx"));
+const InsuranceForm = lazy(() => import("../pages/admin/LifeInsuranceFrom.jsx"));
+const QuoteLifeInsuranceFrom = lazy(() => import("../pages/QuoteLifeInsuranceFrom.jsx"));
+const CarouselSliderForm = lazy(() => import("../pages/InsuranceFormCaro.jsx"));
+const HeroCarouselForm = lazy(() => import("../pages/HeroCarouselForm.jsx"));
+const HeroCarouselManager = lazy(() => import("../pages/HeroCarouselManager.jsx"));
+const InsuranceCarousel = lazy(() => import("../pages/InsuranceCarouselManager.jsx"));
+const UserInsuranceTabs = lazy(() => import("../pages/UserInsuranceTabs.jsx"));
+const ReviewsSectionForm = lazy(() => import("../pages/ReviewsSectionForm.jsx"));
+const AdminReviewsTable = lazy(() => import("../pages/AdminReviewsTable.jsx"));
+const VisitorNews = lazy(() => import("../pages/admin/VisitorNews.jsx"));
+const ReviewsSection = lazy(() => import("../pages/admin/ReviewsSection.jsx")); // ✅ fixed with extension
+const AddVisitorForm = lazy(() => import("../pages/admin/AddVisitorNewsForm.jsx"));
+const AddPolicyForm = lazy(() => import("../pages/admin/AddPolicyForm.jsx"));
+const PolicyManagementTable = lazy(() => import("../pages/admin/PolicyTableEidt.jsx"));
+const ContactManager = lazy(() => import("../pages/admin/adminContact.jsx"));
+const ContactTableManager = lazy(() => import("../pages/admin/ContactTableManager.jsx"));
+const VisitorNewsTable = lazy(() => import("../pages/admin/VisitorNewsTable.jsx"));
+const Messages = lazy(() => import("../pages/admin/Messages.jsx"));
 
 // Agent Pages
-const AgentDashboard = lazy(() => import("../components/agents/AgentDashboard"));
+const AgentDashboard = lazy(() => import("../components/agents/AgentDashboard.jsx"));
 
 // Insurance Management
-const InsuranceServiceForm = lazy(() => import("../pages/InsuranceServiceForm"));
-const OurInsurancePolicy = lazy(() => import("../pages/ourInsurancePolice"));
-const InsuranceDashboardManager = lazy(() => import("../pages/InsuranceDashboard"));
+const InsuranceServiceForm = lazy(() => import("../pages/InsuranceServiceForm.jsx"));
+const OurInsurancePolicy = lazy(() => import("../pages/ourInsurancePolice.jsx"));
+const InsuranceDashboardManager = lazy(() => import("../pages/InsuranceDashboard.jsx"));
 
 // ---------------- PrivateRoute Component ----------------
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
@@ -151,7 +151,6 @@ const AppRoutes = () => (
         }
       >
         <Route path="all-policies" element={<AllPolicies />} />
-        {/* More nested management routes can go here */}
       </Route>
 
       {/* ---------------- Admin Panel ---------------- */}
