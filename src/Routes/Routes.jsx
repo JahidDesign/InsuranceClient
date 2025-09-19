@@ -18,7 +18,7 @@ const InsuranceDetails = lazy(() => import("../pages/InsuranceDetails.jsx"));
 const MyBookQuote = lazy(() => import("../pages/MyBookQuote.jsx"));
 const BlogDetail = lazy(() => import("../pages/BlogDetail.jsx"));
 
-// Admin Pages
+// ---------------- Admin Pages ----------------
 const AdminLayout = lazy(() => import("../components/admin/AdminLayout.jsx"));
 const AdminDashboard = lazy(() => import("../pages/admin/Dashboard.jsx"));
 const ManagePolicies = lazy(() => import("../pages/admin/ManagePolicies.jsx"));
@@ -28,8 +28,9 @@ const Transactions = lazy(() => import("../pages/admin/Transactions.jsx"));
 const ManagementTable = lazy(() => import("../pages/admin/ManagementTable.jsx"));
 const AddBlogForm = lazy(() => import("../pages/admin/AddBlogForm.jsx"));
 const ManageBlogTable = lazy(() => import("../pages/admin/ManageBlogTable.jsx"));
-const InsuranceForm = lazy(() => import("../pages/admin/LifeInsuranceFrom.jsx"));
-const QuoteLifeInsuranceFrom = lazy(() => import("../pages/QuoteLifeInsuranceFrom.jsx"));
+const InsuranceServiceSection = lazy(() => import("../pages/admin/InsuranceServiceSection.jsx"));
+const InsuranceForm = lazy(() => import("../pages/admin/LifeInsuranceForm.jsx")); // ✅ Fixed typo
+const QuoteLifeInsuranceForm = lazy(() => import("../pages/QuoteLifeInsuranceFrom.jsx"));
 const CarouselSliderForm = lazy(() => import("../pages/InsuranceFormCaro.jsx"));
 const HeroCarouselForm = lazy(() => import("../pages/HeroCarouselForm.jsx"));
 const HeroCarouselManager = lazy(() => import("../pages/HeroCarouselManager.jsx"));
@@ -38,22 +39,19 @@ const UserInsuranceTabs = lazy(() => import("../pages/UserInsuranceTabs.jsx"));
 const ReviewsSectionForm = lazy(() => import("../pages/ReviewsSectionForm.jsx"));
 const AdminReviewsTable = lazy(() => import("../pages/AdminReviewsTable.jsx"));
 const VisitorNews = lazy(() => import("../pages/admin/VisitorNews.jsx"));
-const ReviewsSection = lazy(() => import("../pages/admin/ReviewsSection.jsx")); // ✅ fixed with extension
+const ReviewsSection = lazy(() => import("../pages/admin/ReviewsSection.jsx"));
 const AddVisitorForm = lazy(() => import("../pages/admin/AddVisitorNewsForm.jsx"));
 const AddPolicyForm = lazy(() => import("../pages/admin/AddPolicyForm.jsx"));
-const PolicyManagementTable = lazy(() => import("../pages/admin/PolicyTableEidt.jsx"));
+const PolicyManagementTable = lazy(() => import("../pages/admin/PolicyTableEdit.jsx")); // ✅ Fixed typo
 const ContactManager = lazy(() => import("../pages/admin/adminContact.jsx"));
 const ContactTableManager = lazy(() => import("../pages/admin/ContactTableManager.jsx"));
 const VisitorNewsTable = lazy(() => import("../pages/admin/VisitorNewsTable.jsx"));
 const Messages = lazy(() => import("../pages/admin/Messages.jsx"));
-
-// Agent Pages
-const AgentDashboard = lazy(() => import("../components/agents/AgentDashboard.jsx"));
-
-// Insurance Management
-const InsuranceServiceForm = lazy(() => import("../pages/InsuranceServiceForm.jsx"));
-const OurInsurancePolicy = lazy(() => import("../pages/ourInsurancePolice.jsx"));
+const OurInsurancePolicy = lazy(() => import("../pages/OurInsurancePolicy.jsx")); // ✅ Fixed typo
 const InsuranceDashboardManager = lazy(() => import("../pages/InsuranceDashboard.jsx"));
+
+// ---------------- Agent Pages ----------------
+const AgentDashboard = lazy(() => import("../components/agents/AgentDashboard.jsx"));
 
 // ---------------- PrivateRoute Component ----------------
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
@@ -109,7 +107,7 @@ const AppRoutes = () => (
         path="/quote-insurance"
         element={
           <PrivateRoute>
-            <QuoteLifeInsuranceFrom />
+            <QuoteLifeInsuranceForm />
           </PrivateRoute>
         }
       />
@@ -141,7 +139,7 @@ const AppRoutes = () => (
         }
       />
 
-      {/* ---------------- Management Section (Admin + Agent) ---------------- */}
+      {/* ---------------- Management Section ---------------- */}
       <Route
         path="/management/*"
         element={
@@ -170,7 +168,7 @@ const AppRoutes = () => (
         <Route path="policies/:mode/:id?" element={<AddPolicyForm />} />
 
         {/* Insurance */}
-        <Route path="insurance-policies/:mode/:id?" element={<InsuranceServiceForm />} />
+        <Route path="insurance-policies/:mode/:id?" element={<InsuranceServiceSection />} />
         <Route path="all-policies/edit" element={<InsuranceDashboardManager />} />
         <Route path="all-policies/add" element={<OurInsurancePolicy />} />
 
