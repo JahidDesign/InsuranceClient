@@ -11,9 +11,10 @@ import {
 import { Helmet } from "react-helmet-async";
 
 // Import actual components
-import ClaimsSection from "./ClaimsSection";
+
 import PaymentsTable from "./PaymentsTable";
 import InsuranceServicesList from "./InsuranceServicesList";
+import InsuranceCardSection from "./InsuranceCardSection";
 import InsPaymentsTable from "./InsPaymentsTable";
 import ProfileTableAPI from "./ProfileTable";
 
@@ -85,7 +86,7 @@ const AllPolicies = () => (
   <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6 md:p-8 relative overflow-hidden">
     {/* ✅ SEO Helmet + Favicon */}
     <Helmet>
-      <title>Insurance Dashboard | Smart Insurance</title>
+      <title>Insurance Policies | Smart Insurance</title>
       <meta
         name="description"
         content="View and manage all your policies, claims, payments, and insurance services in one smart dashboard."
@@ -103,7 +104,7 @@ const AllPolicies = () => (
       {/* Header */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4 tracking-tight">
-          Insurance Dashboard
+          Insurance Policies
         </h1>
         <p className="text-gray-600 text-lg font-medium">
           Manage your policies, claims, and payments in one place
@@ -111,19 +112,7 @@ const AllPolicies = () => (
       </div>
 
       {/* Sections */}
-      <SectionCard
-        icon={FileText}
-        title="Claims Overview"
-        gradientFrom="blue-500"
-        gradientTo="cyan-500"
-        actions={
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25">
-            <Plus className="w-4 h-4" /> New Claim
-          </button>
-        }
-      >
-        <ClaimsSection />
-      </SectionCard>
+      <InsuranceCardSection/>
 
       <SectionCard
         icon={DollarSign}

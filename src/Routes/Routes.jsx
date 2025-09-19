@@ -1,54 +1,61 @@
-// File: AppRoutes.jsx
+// File: src/routes/AppRoutes.jsx
+import React, { useContext, Suspense, lazy } from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import ProtectedRoute from "./ProtectedRoute";
 
-// Pages
-import Home from "../pages/Home";
-import About from "../pages/About";
-import Blog from "../pages/Blog";
-import AllPolicies from "../pages/AllPolicies";
-import ContactPage from "../pages/Contact";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Profile from "../pages/Profile";
-import NotFound from "../pages/NotFound";
-import VisitorDetailsPage from "../pages/VisitorDetailsPage";
-import InsuranceServiceForm from "../pages/InsuranceServiceForm";
-import InsuranceServicesDashboard from "../pages/InsuranceServicesDashboard";
+// ---------------- Lazy load pages ----------------
+const Home = lazy(() => import("../pages/Home"));
+const About = lazy(() => import("../pages/About"));
+const Blog = lazy(() => import("../pages/Blog"));
+const AllPolicies = lazy(() => import("../pages/AllPolicies"));
+const ContactPage = lazy(() => import("../pages/Contact"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const Profile = lazy(() => import("../pages/Profile"));
+const NotFound = lazy(() => import("../pages/NotFound"));
+const VisitorDetailsPage = lazy(() => import("../pages/VisitorDetailsPage"));
+const InsuranceDetails  = lazy(() => import("../pages/InsuranceDetails"));
+const MyBookQuote  = lazy(() => import("../pages/MyBookQuote"));
+const BlogDetail = lazy(() => import("../pages/BlogDetail"));
 
-// Admin Pages & Layout
-import AdminLayout from "../components/admin/AdminLayout";
-import AdminDashboard from "../pages/admin/Dashboard";
-import ManagePolicies from "../pages/admin/ManagePolicies";
-import ManageUsers from "../pages/admin/ManageUsers";
-import ManageBlog from "../pages/admin/ManageBlog";
-import Transactions from "../pages/admin/Transactions";
-import ManagementTable from "../pages/admin/ManagementTable";
-import AddBlogForm from "../pages/admin/AddBlogForm";
-import ManageBlogTable from "../pages/admin/ManageBlogTable";
-import InsuranceForm from "../pages/admin/LifeInsuranceFrom";
-import CarouselSliderForm from "../pages/InsuranceFormCaro";
-import HeroCarouselForm from "../pages/HeroCarouselForm";
-import HeroCarouselManager from "../pages/HeroCarouselManager";
-import InsuranceCarousel from "../pages/InsuranceCarouselManager";
-import ReviewsSectionForm from "../pages/ReviewsSectionForm";
-import AdminReviewsTable from "../pages/AdminReviewsTable";
-import VisitorNews from "../pages/admin/visitorNews";
-import ReviewsSection from "../pages/admin/ReviewsSection";
-import AddVisitorForm from "../pages/admin/AddVisitorNewsForm";
-import AddPolicyForm from "../pages/admin/AddPolicyForm";
-import PolicyManagementTable from "../pages/admin/PolicyTableEidt";
-import  ContactManager from "../pages/admin/adminContact";
-import  ContactTableManager from "../pages/admin/ContactTableManager";
-import VisitorNewsTable from "../pages/admin/VisitorNewsTable";
-import Messages from "../pages/admin/Messages";
+// Admin Pages
+const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("../pages/admin/Dashboard"));
+const ManagePolicies = lazy(() => import("../pages/admin/ManagePolicies"));
+const ManageUsers = lazy(() => import("../pages/admin/ManageUsers"));
+const ManageBlog = lazy(() => import("../pages/admin/ManageBlog"));
+const Transactions = lazy(() => import("../pages/admin/Transactions"));
+const ManagementTable = lazy(() => import("../pages/admin/ManagementTable"));
+const AddBlogForm = lazy(() => import("../pages/admin/AddBlogForm"));
+const ManageBlogTable = lazy(() => import("../pages/admin/ManageBlogTable"));
+const InsuranceForm = lazy(() => import("../pages/admin/LifeInsuranceFrom"));
+const QuoteLifeInsuranceFrom = lazy(() => import("../pages/QuoteLifeInsuranceFrom"));
+const CarouselSliderForm = lazy(() => import("../pages/InsuranceFormCaro"));
+const HeroCarouselForm = lazy(() => import("../pages/HeroCarouselForm"));
+const HeroCarouselManager = lazy(() => import("../pages/HeroCarouselManager"));
+const InsuranceCarousel = lazy(() => import("../pages/InsuranceCarouselManager"));
+const UserInsuranceTabs = lazy(() => import("../pages/UserInsuranceTabs"));
+const ReviewsSectionForm = lazy(() => import("../pages/ReviewsSectionForm"));
+const AdminReviewsTable = lazy(() => import("../pages/AdminReviewsTable"));
+const VisitorNews = lazy(() => import("../pages/admin/visitorNews"));
+const ReviewsSection = lazy(() => import("../pages/admin/ReviewsSection"));
+const AddVisitorForm = lazy(() => import("../pages/admin/AddVisitorNewsForm"));
+const AddPolicyForm = lazy(() => import("../pages/admin/AddPolicyForm"));
+const PolicyManagementTable = lazy(() => import("../pages/admin/PolicyTableEidt"));
+const ContactManager = lazy(() => import("../pages/admin/adminContact"));
+const ContactTableManager = lazy(() => import("../pages/admin/ContactTableManager"));
+const VisitorNewsTable = lazy(() => import("../pages/admin/VisitorNewsTable"));
+const Messages = lazy(() => import("../pages/admin/Messages"));
 
 // Agent Pages
-import AgentDashboard from "../components/agents/AgentDashboard";
+const AgentDashboard = lazy(() => import("../components/agents/AgentDashboard"));
 
-// ✅ PrivateRoute Component
+// Insurance Management
+const InsuranceServiceForm = lazy(() => import("../pages/InsuranceServiceForm"));
+const OurInsurancePolicy = lazy(() => import("../pages/ourInsurancePolice"));
+const InsuranceDashboardManager = lazy(() => import("../pages/InsuranceDashboard"));
+
+// ---------------- PrivateRoute Component ----------------
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading, role, isAdmin } = useContext(AuthContext);
 
@@ -66,7 +73,7 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
   return children;
 };
 
-// ✅ Management Layout with Outlet for nested routes
+// ---------------- Management Layout ----------------
 const ManagementLayout = () => (
   <div>
     <h1 className="text-2xl font-bold mb-4">Management Section</h1>
@@ -74,108 +81,136 @@ const ManagementLayout = () => (
   </div>
 );
 
-// ✅ App Routes
+// ---------------- App Routes ----------------
 const AppRoutes = () => (
-  <Routes>
-    {/* Public Routes */}
-    <Route path="/" element={<Home />} />
-    <Route path="/about" element={<About />} />
-    <Route path="/blog" element={<Blog />} />
-    <Route
-      path="/allpolicies"
-      element={
-        <ProtectedRoute>
-          <AllPolicies />
-        </ProtectedRoute>
-      }
-    />
-    <Route path="/contact" element={<ContactPage />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/visitor/:id" element={<VisitorDetailsPage />} />
-    <Route path="/*" element={<NotFound />} />
+  <Suspense fallback={<p className="text-center mt-20">Loading...</p>}>
+    <Routes>
+      {/* ---------------- Public Routes ---------------- */}
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route
+        path="/all-policies"
+        element={
+          <PrivateRoute>
+            <AllPolicies />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/mybook-quote"
+        element={
+          <PrivateRoute>
+            <MyBookQuote />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/quote-insurance"
+        element={
+          <PrivateRoute>
+            <QuoteLifeInsuranceFrom />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/visitor/:id" element={<VisitorDetailsPage />} />
+      <Route path="/insurance/:id" element={<InsuranceDetails />} />
+      <Route path="/blog/:blogId" element={<BlogDetail />} />
+      <Route path="/*" element={<NotFound />} />
 
-    {/* User Dashboard */}
-    <Route
-      path="/profile"
-      element={
-        <PrivateRoute>
-          <Profile />
-        </PrivateRoute>
-      }
-    />
+      {/* ---------------- User Dashboard ---------------- */}
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        }
+      />
 
-    {/* Agent Dashboard */}
-    <Route
-      path="/agent/*"
-      element={
-        <PrivateRoute allowedRoles={["agent"]}>
-          <AgentDashboard />
-        </PrivateRoute>
-      }
-    />
+      {/* ---------------- Agent Dashboard ---------------- */}
+      <Route
+        path="/agent/*"
+        element={
+          <PrivateRoute allowedRoles={["agent"]}>
+            <AgentDashboard />
+          </PrivateRoute>
+        }
+      />
 
-    {/* Management Section (Admin + Agent) */}
-    <Route
-      path="/management/*"
-      element={
-        <PrivateRoute allowedRoles={["admin", "agent"]}>
-          <ManagementLayout />
-        </PrivateRoute>
-      }
-    >
-      <Route path="allpolicies" element={<AllPolicies />} />
-      {/* Add more nested management routes here */}
-    </Route>
+      {/* ---------------- Management Section (Admin + Agent) ---------------- */}
+      <Route
+        path="/management/*"
+        element={
+          <PrivateRoute allowedRoles={["admin", "agent"]}>
+            <ManagementLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route path="all-policies" element={<AllPolicies />} />
+        {/* More nested management routes can go here */}
+      </Route>
 
-    {/* Admin Panel */}
-    <Route
-      path="/admin/*"
-      element={
-        <PrivateRoute allowedRoles={["admin"]}>
-          <AdminLayout />
-        </PrivateRoute>
-      }
-    >
-      <Route index element={<AdminDashboard />} />
-      <Route path="manage-policies" element={<ManagePolicies />} />
-      <Route path="manage-policies/add" element={<CarouselSliderForm />} />
-      <Route path="manage-policies/edit" element={<InsuranceCarousel />} />
+      {/* ---------------- Admin Panel ---------------- */}
+      <Route
+        path="/admin/*"
+        element={
+          <PrivateRoute allowedRoles={["admin"]}>
+            <AdminLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
 
-      <Route path="policies/add" element={<AddPolicyForm />} />
-      <Route path="policies/edit" element={<PolicyManagementTable />} />
+        {/* Policies */}
+        <Route path="manage-policies" element={<ManagePolicies />} />
+        <Route path="manage-policies/:mode/:id?" element={<CarouselSliderForm />} />
+        <Route path="policies/:mode/:id?" element={<AddPolicyForm />} />
 
-      <Route path="insurance-policies/add" element={<InsuranceServiceForm />} />
-      <Route path="insurance-policies/edit" element={<InsuranceServicesDashboard />} />
+        {/* Insurance */}
+        <Route path="insurance-policies/:mode/:id?" element={<InsuranceServiceForm />} />
+        <Route path="all-policies/edit" element={<InsuranceDashboardManager />} />
+        <Route path="all-policies/add" element={<OurInsurancePolicy />} />
 
-      <Route path="manage-users" element={<ManageUsers />} />
-      <Route path="manage-users/add" element={<InsuranceForm />} />
+        {/* Users */}
+        <Route path="manage-users" element={<ManageUsers />} />
+        <Route path="manage-users/:mode/:id?" element={<InsuranceForm />} />
+        <Route path="manage-users/edit/" element={<UserInsuranceTabs />} />
 
-      <Route path="transactions" element={<Transactions />} />
-      <Route path="manage-applications" element={<ManagementTable />} />
-      
+        {/* Transactions & Applications */}
+        <Route path="transactions" element={<Transactions />} />
+        <Route path="manage-applications" element={<ManagementTable />} />
 
-      <Route path="manage-blog" element={<ManageBlog />} />
-      <Route path="manage-blog/add" element={<AddBlogForm />} />
-      <Route path="manage-blog/edit" element={<ManageBlogTable />} />
+        {/* Blog */}
+        <Route path="manage-blog" element={<ManageBlog />} />
+        <Route path="manage-blog/:mode/:id?" element={<AddBlogForm />} />
+        <Route path="manage-blog/edit/:id" element={<ManageBlogTable />} />
 
-      <Route path="messages-section" element={<Messages />} />
-      <Route path="messages-section/add" element={<ContactManager />} />
-      <Route path="messages-section/edit" element={<ContactTableManager />} />
+        {/* Messages */}
+        <Route path="messages-section" element={<Messages />} />
+        <Route path="messages-section/:mode/:id?" element={<ContactManager />} />
+        <Route path="messages-section/edit/:id" element={<ContactTableManager />} />
 
-      <Route path="visitor-news" element={<VisitorNews />} />
-      <Route path="visitor-news/add" element={<AddVisitorForm />} />
-      <Route path="visitor-news/edit" element={<VisitorNewsTable />} />
+        {/* Visitor News */}
+        <Route path="visitor-news" element={<VisitorNews />} />
+        <Route path="visitor-news/:mode/:id?" element={<AddVisitorForm />} />
+        <Route path="visitor-news/edit/:id" element={<VisitorNewsTable />} />
 
-      <Route path="reviews-section" element={<ReviewsSection />} />
-      <Route path="reviews-section/add" element={<ReviewsSectionForm />} />
-      <Route path="reviews-section/edit" element={<AdminReviewsTable />} />
+        {/* Reviews Section */}
+        <Route path="reviews-section" element={<ReviewsSection />} />
+        <Route path="reviews-section/:mode/:id?" element={<ReviewsSectionForm />} />
+        <Route path="reviews-section/edit/:id" element={<AdminReviewsTable />} />
 
-      <Route path="hero-section" element={<HeroCarouselManager />} />
-      <Route path="hero-section/add" element={<HeroCarouselForm />} />
-      <Route path="hero-section/edit" element={<HeroCarouselManager />} />
-    </Route>
-  </Routes>
+        {/* Hero Section */}
+        <Route path="hero-section" element={<HeroCarouselManager />} />
+        <Route path="hero-section/:mode/:id?" element={<HeroCarouselForm />} />
+        <Route path="hero-section/edit/:id" element={<HeroCarouselManager />} />
+      </Route>
+    </Routes>
+  </Suspense>
 );
 
 export default AppRoutes;

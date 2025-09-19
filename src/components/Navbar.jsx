@@ -1,38 +1,29 @@
 // File: src/components/Navbar.jsx
-import { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  Menu,
-  X,
-  User,
-  LogOut,
-  Shield,
-  Home,
-  Info,
-  FileText,
-  BookOpen,
-  Mail,
-} from "lucide-react";
+import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
 const navLinks = [
-  { name: "Home", path: "/", icon: Home },
-  { name: "About", path: "/about", icon: Info },
-  { name: "All Policies", path: "/allpolicies", icon: FileText },
-  { name: "Blog", path: "/blog", icon: BookOpen },
-  { name: "Contact", path: "/contact", icon: Mail },
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "All Policies", path: "/all-policies" },
+  { name: "Blog", path: "/blog" },
+  { name: "Contact", path: "/contact" },
+  { name: "BookedQuote", path: "/mybook-quote" },
 ];
 
 const Navbar = () => {
   const { user, logout, role } = useContext(AuthContext);
   const location = useLocation();
   const dropdownRef = useRef(null);
+
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const [bookedCount, setBookedCount] = useState(0);
 
   const isAdmin = role === "admin";
-
   const displayName =
     user?.displayName || user?.name || user?.email?.split("@")[0] || "User";
   const photoURL = user?.photoURL || user?.photo || "/default-avatar.png";
@@ -55,21 +46,38 @@ const Navbar = () => {
     return () => window.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Fetch booked quotes count
+  useEffect(() => {
+    const fetchBookedCount = async () => {
+      if (!user) return setBookedCount(0);
+
+      try {
+        const res = await fetch(
+          `https://insurances-lmy8.onrender.com/bookInsurance?email=${user.email}`
+        );
+        const data = await res.json();
+        setBookedCount(data.length);
+      } catch (error) {
+        console.error("Failed to fetch booked quotes:", error);
+      }
+    };
+
+    fetchBookedCount();
+  }, [user]);
+
   return (
     <>
-      {/* Spacer for fixed navbar */}
       <div className="h-20"></div>
-
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-700 ${
           scrolled
-            ? "bg-white/70 backdrop-blur-lg shadow-lg border-b border-white/20"
+            ? "bg-white/80 backdrop-blur-lg shadow-lg border-b border-white/20"
             : "bg-white/50 backdrop-blur-xl shadow-xl"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="group relative">
+          <Link to="/" className="flex items-center">
             <img
               src="insurancen.svg"
               alt="LifeSecure"
@@ -78,76 +86,81 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-4">
-            {navLinks.map(({ name, path, icon: Icon }) => (
-              <Link
-                key={name}
-                to={path}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-medium transition-all duration-500 ${
-                  location.pathname === path
-                    ? "bg-gradient-to-r from-blue-500 via-purple-600 to-blue-600 text-white shadow-lg scale-105"
-                    : "text-gray-700 hover:bg-white/50 hover:shadow-lg hover:text-gray-900"
-                }`}
-              >
-                <Icon className="w-4 h-4" /> {name}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center space-x-4 text-sm font-medium">
+            {navLinks.map(({ name, path }) => {
+              const isBookQuote = path === "/mybook-quote";
+              return (
+                <Link
+                  key={name}
+                  to={path}
+                  className={`relative px-4 py-2 rounded-lg transition-all duration-500 ${
+                    location.pathname === path
+                      ? "bg-blue-500 text-white shadow-lg"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {name}
+                  {isBookQuote && bookedCount > 0 && (
+                    <span className="absolute -top-1 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full">
+                      {bookedCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
 
             {isAdmin && (
               <Link
                 to="/admin"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-medium text-red-600 hover:bg-red-50 hover:shadow-lg transition-all duration-500"
+                className="px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition"
               >
-                <Shield className="w-4 h-4" /> Admin Panel
+                Admin Panel
               </Link>
             )}
 
-            {/* Profile Dropdown */}
+            {/* Profile */}
             {user ? (
               <div className="relative ml-4" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-3 p-2 rounded-full hover:bg-white/50 hover:shadow-lg transition duration-500"
+                  className="flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 transition"
                 >
                   <img
                     src={photoURL}
                     alt="avatar"
-                    className="w-12 h-12 rounded-full border-2 border-white shadow-lg object-cover"
+                    className="w-10 h-10 rounded-full object-cover border"
                   />
-                  <div className="hidden xl:block text-left">
-                    <div className="font-semibold text-gray-800">{displayName}</div>
-                    <div className="text-xs text-green-500 font-semibold">● Online</div>
-                  </div>
+                  <span className="hidden xl:block text-gray-800">{displayName}</span>
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-72 bg-white/90 backdrop-blur-xl shadow-2xl border border-white/30 rounded-3xl py-3 z-50 overflow-hidden animate-fadeIn">
-                    <div className="px-5 py-4 border-b border-gray-100/50 flex items-center gap-4">
+                  <div className="absolute right-0 mt-2 w-64 bg-white shadow-xl rounded-xl py-2 z-50">
+                    <div className="px-4 py-2 border-b flex items-center gap-3">
                       <img
                         src={photoURL}
                         alt="avatar"
-                        className="w-16 h-16 rounded-2xl border-2 border-white shadow-lg object-cover"
+                        className="w-12 h-12 rounded-lg object-cover border"
                       />
                       <div>
-                        <div className="font-bold text-gray-800 text-lg">{displayName}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="font-semibold text-gray-800">{displayName}</div>
+                        <div className="text-xs text-gray-500">{user.email}</div>
                       </div>
                     </div>
                     <Link
                       to="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-4 w-full px-5 py-3 text-gray-700 hover:bg-blue-50 rounded-2xl transition-all duration-300"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition"
                     >
-                      <User className="w-4 h-4 text-blue-600" /> Profile Settings
+                      Profile Settings
                     </Link>
                     <button
                       onClick={() => {
-                        logout(); // manual logout only
+                        logout();
                         setDropdownOpen(false);
                       }}
-                      className="flex items-center gap-4 w-full px-5 py-3 text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300"
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded transition"
                     >
-                      <LogOut className="w-4 h-4 text-red-600" /> Sign Out
+                      Sign Out
                     </button>
                   </div>
                 )}
@@ -155,16 +168,16 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="ml-4 px-6 py-2 bg-gradient-to-r from-blue-500 via-purple-600 to-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                className="ml-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition text-sm"
               >
-                <User className="w-4 h-4" /> Login / Sign Up
+                Login / Sign Up
               </Link>
             )}
           </div>
 
           {/* Mobile Hamburger */}
           <button
-            className="lg:hidden p-3 rounded-full bg-white/50 hover:bg-white/80 hover:shadow-lg transition duration-500"
+            className="lg:hidden p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
             onClick={() => setSideMenuOpen(true)}
           >
             <Menu className="w-6 h-6" />
@@ -173,72 +186,81 @@ const Navbar = () => {
 
         {/* Mobile Side Menu */}
         <div
-          className={`fixed top-0 right-0 h-screen w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 transform transition-transform duration-500 ${
+          className={`fixed top-0 right-0 h-screen w-72 bg-white shadow-xl z-50 transform transition-transform duration-500 ${
             sideMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <Link to="/" className="font-bold text-xl">LifeSecure</Link>
+          <div className="flex justify-between items-center px-6 py-4 border-b">
+            <Link to="/" className="font-bold text-lg">
+              LifeSecure
+            </Link>
             <button onClick={() => setSideMenuOpen(false)}>
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="flex flex-col px-6 py-4 space-y-3">
-            {navLinks.map(({ name, path, icon: Icon }) => (
-              <Link
-                key={name}
-                to={path}
-                onClick={() => setSideMenuOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold transition-all duration-300 ${
-                  location.pathname === path
-                    ? "bg-gradient-to-r from-blue-500 via-purple-600 to-blue-600 text-white shadow-lg"
-                    : "text-gray-700 hover:bg-white/50 hover:shadow-lg hover:text-gray-900"
-                }`}
-              >
-                <Icon className="w-5 h-5" /> {name}
-              </Link>
-            ))}
+          <div className="flex flex-col px-6 py-4 space-y-3 text-sm font-medium">
+            {navLinks.map(({ name, path }) => {
+              const isBookQuote = path === "/mybook-quote";
+              return (
+                <Link
+                  key={name}
+                  to={path}
+                  onClick={() => setSideMenuOpen(false)}
+                  className={`relative px-4 py-2 rounded-lg transition-all duration-300 ${
+                    location.pathname === path
+                      ? "bg-blue-500 text-white shadow"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {name}
+                  {isBookQuote && bookedCount > 0 && (
+                    <span className="absolute -top-1 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full">
+                      {bookedCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
 
             {isAdmin && (
               <Link
                 to="/admin"
                 onClick={() => setSideMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-red-600 hover:bg-red-50 hover:shadow-lg transition-all duration-300"
+                className="px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition"
               >
-                <Shield className="w-5 h-5" /> Admin Panel
+                Admin Panel
               </Link>
             )}
 
             {user && (
-              <div className="mt-6 border-t border-white/20 pt-4 space-y-3">
-                <div className="flex items-center gap-4 py-3 bg-white/30 backdrop-blur-md rounded-2xl">
+              <div className="mt-6 border-t pt-4 space-y-3">
+                <div className="flex items-center gap-3 py-2">
                   <img
                     src={photoURL}
                     alt="avatar"
-                    className="w-14 h-14 rounded-2xl border-2 border-white shadow-lg object-cover"
+                    className="w-12 h-12 rounded-lg object-cover border"
                   />
                   <div>
                     <div className="font-semibold text-gray-800">{displayName}</div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                    <div className="text-xs text-green-500 font-semibold">● Online</div>
+                    <div className="text-xs text-gray-500">{user.email}</div>
                   </div>
                 </div>
                 <Link
                   to="/profile"
                   onClick={() => setSideMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-2xl hover:bg-blue-50 transition-all duration-300"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition"
                 >
-                  <User className="w-5 h-5 text-blue-600" /> Profile Settings
+                  Profile Settings
                 </Link>
                 <button
                   onClick={() => {
                     logout();
                     setSideMenuOpen(false);
                   }}
-                  className="flex items-center gap-3 px-4 py-3 text-red-600 rounded-2xl hover:bg-red-50 transition-all duration-300"
+                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded transition"
                 >
-                  <LogOut className="w-5 h-5 text-red-600" /> Sign Out
+                  Sign Out
                 </button>
               </div>
             )}
