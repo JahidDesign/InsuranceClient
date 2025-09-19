@@ -1,4 +1,4 @@
-import InsuranceForm from './LifeInsuranceFrom';
+import InsuranceForm from './LifeInsuranceForm';
 
 const ManageUsers = () => {
   return (
